@@ -34,14 +34,17 @@ app.get("/", (req, res) => {
 });
 app.post("/upload", (req, res) => {
   const newpath = __dirname + "/uploads/";
-  const file = req.files.file;
-  const filename = file.name;
+  console.log(req.files.file);
+  const files = req.files.file;
 
-  file.mv(`${newpath}${filename}`, (err) => {
-    if (err) {
-      res.status(500).send({ message: "File upload failed", code: 200 });
-    }
-    res.status(200).send({ message: "File Uploaded", code: 200 });
+  files.forEach((el) => {
+    el.mv(`${newpath}${el.name}`, (err) => {
+      if (err) {
+         return res.status(500).send({ message: "File upload failed", code: 200 });
+      } else {
+       return res.status(200).send({ message: "File Uploaded", code: 200 });
+      }
+    });
   });
 });
 app.listen(port, () => {
